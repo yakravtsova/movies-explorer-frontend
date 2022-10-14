@@ -1,0 +1,25 @@
+.account-link {
+  position: relative;
+  display: block;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  margin-right: 43px;
+  margin-top: -1px;
+}
+
+.account-link::after {
+  content: '';
+  background-image: url('../../images/icon__COLOR_icon-main.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  right: -44px;
+  top: -8px;
+}

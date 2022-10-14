@@ -1,0 +1,41 @@
+.navtab {
+  min-height: 64px;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navtab__wrap {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.navtab__link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.23;
+  border-bottom: 1px solid #fff;
+}
+
+.navtab__menu-item {
+  margin-right: 40px;
+}
+
+.navtab__menu-item:last-of-type {
+  margin-right: 0;
+}
+
+@media all and (max-width: 320px) {
+  .navtab__link {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .navtab__menu-item {
+    margin-right: 24px;
+  }
+}
