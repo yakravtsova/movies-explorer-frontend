@@ -9,19 +9,20 @@ import Register from '../Register/Register';
 import Login from '../Login/Login';
 import './App.css';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import Footer from '../Footer/Footer';
 
 function App() {
   const [ isMenuVisible, setIsMenuVisible ] = useState(false);
   const loc = useLocation();
-  const isRegOrLog = (loc.pathname === '/' || loc.pathname === '/movies' || loc.pathname === '/saved-movies' || loc.pathname === '/profile');
-
+  const isMainPages = (loc.pathname === '/' || loc.pathname === '/movies' || loc.pathname === '/saved-movies');
+  document.documentElement.lang = 'ru';
   const handleMenuOpen = () => {
     setIsMenuVisible(!isMenuVisible);
   }
 
   return (
     <>
-      {isRegOrLog && <Header isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />}
+      {(isMainPages || loc.pathname === '/profile') && <Header isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />}
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/movies" element={<Movies />} />
@@ -31,6 +32,7 @@ function App() {
         <Route path="/signup" element={<Register />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      {isMainPages && <Footer />}
     </>
   );
 }

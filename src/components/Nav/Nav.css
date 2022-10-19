@@ -107,8 +107,9 @@
     background-color: #fff;
     width: 67.7%;
     flex-direction: column;
-    height: calc(100% - 74px);
-    top: 74px;
+    height: 100%;
+    min-width: 320px;
+    top: 0;
     right: -67.7%;
     padding-bottom: 45px;
     box-sizing: border-box;
@@ -119,7 +120,7 @@
   .nav__menu {
     display: flex;
     flex-direction: column;
-    margin-top: 87px;
+    margin-top: 161px;
     align-items: center;
   }
 

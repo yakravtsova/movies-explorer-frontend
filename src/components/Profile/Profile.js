@@ -15,8 +15,8 @@ const Profile = () => {
           </label>
         </div>
         <div className="profile__form-wrap">
-          <button className="profile__button" type="submit">Редактировать</button>
-          <button className="profile__button profile__button_feat_exit" type="submit">Выйти из аккаунта</button>
+          <input className="profile__button" type="submit" value="Редактировать" aria-label="Редактировать" />
+          <button className="profile__button profile__button_feat_exit" type="button" aria-label="Выйти из аккаунта">Выйти из аккаунта</button>
         </div>
       </form>
 

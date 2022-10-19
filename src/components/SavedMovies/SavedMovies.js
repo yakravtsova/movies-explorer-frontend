@@ -1,13 +1,13 @@
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import Footer from '../Footer/Footer';
+import SearchForm from '../SearchForm/SearchForm';
 import './SavedMovies.css';
 
 const SavedMovies = () => {
   return(
-    <>
+    <main>
+      <SearchForm />
       <MoviesCardList />
-      <Footer />
-    </>
+    </main>
   );
 }
 

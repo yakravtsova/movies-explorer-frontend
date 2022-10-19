@@ -67,6 +67,9 @@
   .header__menu-btn_close {
     background-image: url('../../images/close-menu-icon.svg');
     margin-right: 15px;
+    position: fixed;
+    z-index: 3;
+    right: 0;
   }
 }
 

@@ -14,25 +14,25 @@ const Techs = () => {
           </p>
           <ul className="techs__list">
             <li className="techs__item">
-              <a href="https://html5.org/" className="techs__link">HTML</a>
+              <a href="https://html5.org/" className="techs__link" target="_blank" rel="noreferrer">HTML</a>
             </li>
             <li className="techs__item">
-              <a href="https://www.w3.org/Style/CSS/Overview.en.html" className="techs__link">CSS</a>
+              <a href="https://www.w3.org/Style/CSS/Overview.en.html" className="techs__link" target="_blank" rel="noreferrer">CSS</a>
             </li>
             <li className="techs__item">
-              <a href="https://www.javascript.com/" className="techs__link">JS</a>
+              <a href="https://www.javascript.com/" className="techs__link" target="_blank" rel="noreferrer">JS</a>
             </li>
             <li className="techs__item">
-              <a href="https://ru.reactjs.org/" className="techs__link">React</a>
+              <a href="https://ru.reactjs.org/" className="techs__link" target="_blank" rel="noreferrer">React</a>
             </li>
             <li className="techs__item">
-              <a href="https://github.com/" className="techs__link">Git</a>
+              <a href="https://github.com/" className="techs__link" target="_blank" rel="noreferrer">Git</a>
             </li>
             <li className="techs__item">
-              <a href="https://expressjs.com/ru/" className="techs__link">Express.js</a>
+              <a href="https://expressjs.com/ru/" className="techs__link" target="_blank" rel="noreferrer">Express.js</a>
             </li>
             <li className="techs__item">
-              <a href="https://www.mongodb.com/" className="techs__link">mongoDB</a>
+              <a href="https://www.mongodb.com/" className="techs__link" target="_blank" rel="noreferrer">mongoDB</a>
             </li>
           </ul>
         </div>

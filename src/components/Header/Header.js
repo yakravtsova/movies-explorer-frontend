@@ -6,7 +6,6 @@ import Nav from '../Nav/Nav';
 const Header = ({ isMenuVisible, handleMenuOpen }) => {
   const loc = useLocation();
   const isMain = (loc.pathname === '/');
- // const loggedIn = false;
 
   const onBurgerClick = () => {
     handleMenuOpen();
@@ -19,7 +18,7 @@ const Header = ({ isMenuVisible, handleMenuOpen }) => {
           <img className="header__logo" src={logo} alt="Логотип" />
         </Link>
         <Nav loggedIn={!isMain} isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />
-        {!isMain && <button onClick={onBurgerClick} className={`header__menu-btn ${isMenuVisible && 'header__menu-btn_close'}`}></button>}
+        {!isMain && <button type="button" onClick={onBurgerClick} className={`header__menu-btn ${isMenuVisible && 'header__menu-btn_close'}`}></button>}
       </div>
     </header>
   );

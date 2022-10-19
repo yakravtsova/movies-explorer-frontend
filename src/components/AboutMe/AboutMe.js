@@ -14,7 +14,7 @@ const AboutMe = () => {
             До декрета работала репетитором по математике, но твёрдо решила, что больше не вернусь к проверке домашних работ и подготовке к выпускным экзаменам.
             Прошла курс на Яндекс.Практикуме, и теперь я фронтенд-разработчик.
           </p>
-          <a href="https://github.com/yakravtsova" className="about-me__link">Github</a>
+          <a href="https://github.com/yakravtsova" className="about-me__link" target="_blank" rel="noreferrer">Github</a>
         </div>
         <img className="about-me__photo" src={photo} alt="Маргарита" />
       </div>

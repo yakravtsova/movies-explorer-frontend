@@ -9,9 +9,9 @@ const SearchForm = () => {
         <form className="search-form__form">
           <fieldset className="search-form__input-container search-form__input-container_feat_search">
             <label className="search-form__label"><img src={searchIcon} className="search-form__icon" alt="Поиск" />
-              <input className="search-form__input" placeholder="Фильм" />
+              <input className="search-form__input" placeholder="Фильм" required />
             </label>
-            <button className="search-form__btn"></button>
+            <button type="button" className="search-form__btn" aria-label="Найти"></button>
           </fieldset>
           <div className="search-form__line"></div>
           <fieldset className="search-form__input-container search-form__input-container_feat_filter">

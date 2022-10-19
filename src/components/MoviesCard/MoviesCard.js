@@ -18,7 +18,7 @@ const MoviesCard = ({ url, name, duration, isMovies }) => {
       </div>
       <div className="movies-card__info">
         <h2 className="movies-card__title">{name}</h2>
-        <button className={moviesCardButtonClassName} aria-label={isMovies ? "Нравится" : "Удалить"} onClick={handleLikeCard}></button>
+        <button type="button" className={moviesCardButtonClassName} aria-label={isMovies ? "Нравится" : "Удалить"} onClick={handleLikeCard}></button>
       </div>
       <p className="movies-card__duration">{hours ? `${hours}ч ` : ''}{minutes ? `${minutes}м` : ''}</p>
     </li>

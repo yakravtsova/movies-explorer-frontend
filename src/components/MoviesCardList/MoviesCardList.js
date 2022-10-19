@@ -30,7 +30,7 @@ const MoviesCardList = () => {
         <MoviesCard url={banksy} name="Война искусств" duration={102} isMovies={isMovies} />
         <MoviesCard url={baskia} name="Зона" duration={102} isMovies={isMovies} />
       </ul>
-      <button className="card-list__btn">Ещё</button>
+      <button type="button" className="card-list__btn" aria-label="Ещё">Ещё</button>
     </section>
   );
 }
