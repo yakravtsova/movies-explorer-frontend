@@ -15,6 +15,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 70px;
+  box-sizing: border-box;
+}
+
+.header__link {
+  transition: opacity .4s linear;
+}
+
+.header__link:hover {
+  opacity: .8;
 }
 
 .header__logo {
@@ -48,6 +57,11 @@
     background-color: #fff;
     cursor: pointer;
     align-self: end;
+    transition: opacity .4s linear;
+  }
+
+  .header__menu-btn:hover {
+    opacity: .7;
   }
 
   .header__menu-btn_close {

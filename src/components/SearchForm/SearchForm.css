@@ -1,7 +1,9 @@
 .search-form {
   max-width: 1280px;
+  width: 100%;
   margin: auto;
   padding: 70px 70px 10px;
+  box-sizing: border-box;
 }
 
 .search-form__container {
@@ -10,19 +12,51 @@
 }
 
 .search-form__form {
-  height: 72px;
-  background-color: #f9f9f9;
+  min-height: 72px;
   width: 100%;
-  border-radius: 9px;
   display: flex;
   align-items: center;
-  padding: 0 30px 0 19px;
   box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-radius: 9px;
+}
+
+.search-form__input-container {
+  border-radius: 9px;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f9f9f9;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.search-form__line {
+  width: 1px;
+  height: 40px;
+  background-color: #e8e8e8;
+}
+
+.search-form__input-container_feat_search {
+  width: 80%;
+  padding-left: 25px;
+  padding-right: 28px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.search-form__input-container_feat_filter {
+  justify-content: center;
+  width: 20%;
+  min-width: 207px;
 }
 
 .search-form__label {
   display: flex;
   align-items: center;
+  width: 80%;
+/*  min-width: 270px;*/
 }
 
 .search-form__icon {
@@ -37,10 +71,100 @@
   padding: 0 16px 0;
   box-sizing: border-box;
   margin: 0;
+  width: calc(100% - 22px);
+  outline: none;
 }
 
 .search-form__input::placeholder {
   color: #a0a0a0;
   font-size: 18px;
   line-height: 20px;
+}
+
+.search-form__btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #000;
+  border: none;
+  background-image: url('../../images/search-btn-arrow.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  margin: 0 0 0 46px;
+  transition: opacity .4s linear;
+}
+
+.search-form__btn:hover {
+  opacity: .8;
+}
+
+@media all and (max-width: 768px) {
+  .search-form {
+    padding: 80px 30px 10px;
+  }
+
+  .search-form__container {
+    padding-bottom: 109px;
+  }
+
+  .search-form__input-container_feat_search {
+    padding-right: 19px;
+  }
+}
+
+@media all and (max-width: 670px) {
+  .search-form {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .search-form__form {
+    background-color: #fff;
+    flex-direction: column;
+  }
+
+  .search-form__container {
+    padding-bottom: 34px;
+  }
+
+  .search-form__icon {
+    display: none;
+  }
+
+  .search-form__label {
+    margin-top: 15px;
+  }
+
+  .search-form__input::placeholder {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .search-form__input {
+    padding: 0;
+    height: 22px;
+  }
+
+  .search-form__btn {
+    margin-top: 19px;
+    margin-left: 20px;
+    flex-shrink: 0;
+  }
+
+  .search-form__input-container_feat_search {
+    width: 100%;
+    min-height: 72px;
+    padding-left: 19px;
+  }
+
+  .search-form__input-container_feat_filter {
+    width: 100%;
+    background-color: #fff;
+    padding-top: 34px;
+  }
+
+  .search-form__line {
+    display: none;
+  }
 }

@@ -28,8 +28,8 @@ const Nav = ({ loggedIn, isMenuVisible, handleMenuOpen }) => {
           </>
         ) : (
           <>
-            <Link className="nav__reg-link">Регистрация</Link>
-            <Link className="nav__auth-link">Войти</Link>
+            <Link to="signup" className="nav__reg-link">Регистрация</Link>
+            <Link to="signin" className="nav__auth-link">Войти</Link>
           </>
         )}
       </div>

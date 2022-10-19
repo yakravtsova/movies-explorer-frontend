@@ -1,0 +1,36 @@
+.welcome {
+  width: 396px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.welcome__logo {
+  width: 38px;
+  height: 38px;
+}
+
+.welcome__title {
+  margin: 40px 0;
+  font-size: 24px;
+  line-height: 29px;
+  font-weight: 500;
+}
+
+@media all and (max-width: 460px) {
+  .welcome {
+    width: 100%;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+
+  .welcome__logo {
+    flex-grow: 1;
+  }
+
+  .welcome__title {
+    margin: 50px 0 80px;
+    flex-grow: 2;
+  }
+}

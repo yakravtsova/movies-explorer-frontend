@@ -8,11 +8,16 @@
   text-decoration: none;
   margin-right: 43px;
   margin-top: -1px;
+  transition: opacity .4s linear;
+}
+
+.account-link:hover {
+  opacity: .7;
 }
 
 .account-link::after {
   content: '';
-  background-image: url('../../images/icon__COLOR_icon-main.svg');
+  background-image: url('../../images/account-icon.svg');
   background-repeat: no-repeat;
   background-position: center;
   position: absolute;

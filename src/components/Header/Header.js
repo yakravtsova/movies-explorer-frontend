@@ -15,7 +15,7 @@ const Header = ({ isMenuVisible, handleMenuOpen }) => {
   return(
     <header className={`header ${isMain && 'header_bg_pink'}`}>
       <div className="header__wrap">
-        <Link to="/">
+        <Link to="/" className="header__link">
           <img className="header__logo" src={logo} alt="Логотип" />
         </Link>
         <Nav loggedIn={!isMain} isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />

@@ -2,6 +2,7 @@
   padding: 110px 70px 0;
   box-sizing: border-box;
   max-width: 1280px;
+  width: 100%;
   margin: auto;
 }
 
@@ -51,6 +52,11 @@
   margin: 0;
   text-decoration: none;
   color: #000;
+  transition: opacity .4s linear;
+}
+
+.about-me__link:hover {
+  opacity: .7;
 }
 
 .about-me__photo {

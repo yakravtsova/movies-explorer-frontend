@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 const AccountLink = () => {
   return(
-    <NavLink className="account-link">Аккаунт</NavLink>
+    <NavLink to="/profile" className="account-link">Аккаунт</NavLink>
   );
 }
 

@@ -19,6 +19,11 @@
   font-size: 13px;
   line-height: 1.23;
   border-bottom: 1px solid #fff;
+  transition: opacity .4s linear;
+}
+
+.navtab__link:hover {
+  opacity: .7;
 }
 
 .navtab__menu-item {

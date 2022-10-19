@@ -6,7 +6,7 @@ const Portfolio = () => {
       <h3 className="portfolio__title">Портфолио</h3>
       <ul className="portfolio__list">
         <li className="portfolio__list-item">
-          <a className="portfolio__link" href="#">
+          <a className="portfolio__link" href="https://yakravtsova.github.io/how-to-learn/">
             <div className="portfolio__site-item">
               <p className="portfolio__site-text">Статичный сайт</p>
               <p className="portfolio__site-text">↗</p>
@@ -14,7 +14,7 @@ const Portfolio = () => {
           </a>
         </li>
         <li className="portfolio__list-item">
-          <a className="portfolio__link" href="#">
+          <a className="portfolio__link" href="https://yakravtsova.github.io/russian-travel-by-yakravtsova/index.html">
             <div className="portfolio__site-item">
               <p className="portfolio__site-text">Адаптивный сайт</p>
               <p className="portfolio__site-text">↗</p>
@@ -22,7 +22,7 @@ const Portfolio = () => {
           </a>
         </li>
         <li className="portfolio__list-item">
-          <a className="portfolio__link" href="#">
+          <a className="portfolio__link" href="https://yakrvtsva-mesto.students.nomoredomains.sbs/">
             <div className="portfolio__site-item">
               <p className="portfolio__site-text">Одностраничное приложение</p>
               <p className="portfolio__site-text">↗</p>
