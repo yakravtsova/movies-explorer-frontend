@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import Nav from '../Nav/Nav';
 
-const Header = ({ isMenuVisible, handleMenuOpen }) => {
+const Header = ({ isMenuVisible, handleMenuOpen, loggedIn }) => {
   const loc = useLocation();
   const isMain = (loc.pathname === '/');
 
@@ -17,8 +17,8 @@ const Header = ({ isMenuVisible, handleMenuOpen }) => {
         <Link to="/" className="header__link">
           <img className="header__logo" src={logo} alt="Логотип" />
         </Link>
-        <Nav loggedIn={!isMain} isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />
-        {!isMain && <button type="button" onClick={onBurgerClick} className={`header__menu-btn ${isMenuVisible && 'header__menu-btn_close'}`}></button>}
+        <Nav loggedIn={loggedIn} isMenuVisible={isMenuVisible} handleMenuOpen={handleMenuOpen} />
+        {loggedIn && <button type="button" onClick={onBurgerClick} className={`header__menu-btn ${isMenuVisible && 'header__menu-btn_close'}`}></button>}
       </div>
     </header>
   );

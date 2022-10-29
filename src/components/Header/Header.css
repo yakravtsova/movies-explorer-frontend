@@ -54,7 +54,7 @@
     margin: 0 30px 0 0;
     padding: 0;
     border: none;
-    background-color: #fff;
+    background-color: transparent;
     cursor: pointer;
     align-self: end;
     transition: opacity .4s linear;

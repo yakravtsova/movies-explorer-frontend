@@ -57,6 +57,7 @@
 .form__button:disabled {
   background-color: #f8f8f8;
   color: #c2c2c2;
+  cursor:default;
 }
 
 .form__button:hover {
