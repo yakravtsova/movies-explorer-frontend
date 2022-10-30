@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.yakravtsova.nomoredomains.icu/api';
+import { MAIN_URL } from './constants/constants';
 
 function handleResponse(res) {
   if (res.ok) {
@@ -8,7 +8,7 @@ function handleResponse(res) {
 }
 
 export function register(regData) {
-  return fetch(`${BASE_URL}/signup`, {
+  return fetch(`${MAIN_URL}/signup`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -20,7 +20,7 @@ export function register(regData) {
 }
 
 export function authorize(loginData) {
-  return fetch(`${BASE_URL}/signin`, {
+  return fetch(`${MAIN_URL}/signin`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -39,7 +39,7 @@ export function authorize(loginData) {
 
 export function getUserData() {
   const token = localStorage.getItem('token');
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${MAIN_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -52,7 +52,7 @@ export function getUserData() {
 
 export function editUserData(userData) {
   const token = localStorage.getItem('token');
-  return fetch(`${BASE_URL}/users/me`, {
+  return fetch(`${MAIN_URL}/users/me`, {
     method: 'PATCH',
     headers: {'Accept': 'application/json',
     'Content-Type': 'application/json',

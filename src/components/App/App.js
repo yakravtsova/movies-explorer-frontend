@@ -51,15 +51,15 @@ function App() {
   const tokenCheck = () => {
     const location = loc.pathname;
     console.log(location);
+  //  setLocation(loc.pathname);
     const token = localStorage.getItem('token');
     if (token) {
       getUserData()
       .then(data => {
         if (data) {
-          //setEmail(res.email);
           setCurrentUser(data);
           handleLogin();
-          navigate(location);
+          navigate(location, { replace: true });
         }
       })
       .catch(err => {
@@ -107,8 +107,8 @@ function App() {
     .then(data => {
       if (data.token) {
         handleLogin();
-        tokenCheck();
-        navigate('/', { replace: true });
+      //  tokenCheck();
+        navigate('/movies', { replace: true });
       /*  api.getAllData()
           .then(allData => {
             const [userData, allCardsData] = allData;
@@ -134,6 +134,10 @@ function App() {
   //выход из аккаунта
   const handleLogOut = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('allMovies');
+    localStorage.removeItem('foundMovies');
+    localStorage.removeItem('searchReq');
+    setLoggedIn(false);
     navigate('/', { replace: true });
   }
 
@@ -149,6 +153,7 @@ function App() {
       handleInfoTooltipOpen();
     });
   }
+
 
 
 
