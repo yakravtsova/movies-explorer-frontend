@@ -12,7 +12,7 @@ import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import Footer from '../Footer/Footer';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import ProtectedRoute from '../ProtectedRoute';
-import { register, authorize, getUserData, editUserData } from '../../utils/MainApi';
+import { register, authorize, getUserData, editUserData, getSavedMovies } from '../../utils/MainApi';
 import { searchMovies } from '../../utils/MoviesApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import {
@@ -38,8 +38,10 @@ function App() {
   const [ windowWidth, setWindowWidth ] = useState();
   const [ numberOfMoviesAfterSearch, setNumberOfMoviesAfterSearch ] = useState(0);
   const [ step, setStep ] = useState(0);
-  const [ isError, setIsError ] = useState(false);
+  const [ savedMovies, setSavedMovies ] = useState([]);
   const [ foundMovies, setFoundMovies ] = useState([]);
+  const [ isError, setIsError ] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(false);
   const loc = useLocation();
   const isMovies = loc.pathname === '/movies';
   const isMainPages = (loc.pathname === '/' || isMovies || loc.pathname === '/saved-movies');
@@ -214,34 +216,48 @@ function App() {
     });
   }
 
-  const handleFoundMovies = (movies) => {
-    setFoundMovies(movies)
-  }
-
+  //найти фильмы
   const handleSearchMovies = (req) => {
-    /*  let filtered;
-      const allMovies = JSON.parse(localStorage.getItem('allMovies'));
-      if (allMovies) {
-        filtered = allMovies.filter(m => m.nameRU.toLowerCase().includes(req))
+    setIsError(false);
+    setIsLoading(true);
+    searchMovies()
+      .then(res => {
+        const filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
         setFoundMovies(filtered);
         localStorage.setItem('foundMovies', JSON.stringify(filtered));
         localStorage.setItem('searchReq', req);
-      }
-      else {*/
-        searchMovies()
-        .then(res => {
-          const filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
-          setFoundMovies(filtered);
-          localStorage.setItem('allMovies', JSON.stringify(res));
-          localStorage.setItem('foundMovies', JSON.stringify(filtered));
-          localStorage.setItem('searchReq', req);
-        })
-        .catch(err => {
-          console.log(err);
-          setIsError(true)
-        })
-      //}
-    }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsError(true);
+        setIsLoading(false);
+      })
+  }
+
+  const handleSetFoundMovies = (movies) => {
+    setFoundMovies(movies)
+  }
+
+  const handleSetSavedMovies = (movies) => {
+    setSavedMovies(movies)
+  }
+
+  //получить сохранённые фильмы
+  const handleGetSavedMovies = () => {
+    setIsError(false);
+    setIsLoading(true);
+    getSavedMovies()
+      .then(res => {
+        setSavedMovies(res);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setIsError(true);
+        setIsLoading(false);
+      })
+  }
 
 
 
@@ -257,11 +273,21 @@ function App() {
         <Route end path="/" element={<Main />} />
         <Route path="/movies" element={
           <ProtectedRoute loggedIn={loggedIn}>
-            <Movies numAfterSearch={numberOfMoviesAfterSearch} step={step} foundMovies={foundMovies} handleFoundMovies={handleFoundMovies} handleSearchMovies={handleSearchMovies} isError={isError} />
+            <Movies
+              numAfterSearch={numberOfMoviesAfterSearch}
+              step={step}
+              savedMovies={savedMovies}
+              handleGetSavedMovies={handleGetSavedMovies}
+              handleSearchMovies={handleSearchMovies}
+              isLoading={isLoading}
+              isError={isError}
+              handleSetFoundMovies={handleSetFoundMovies}
+              foundMovies={foundMovies}
+              handleSetSavedMovies={handleSetSavedMovies} />
           </ProtectedRoute>} />
         <Route path="/saved-movies" element={
           <ProtectedRoute loggedIn={loggedIn}>
-            <SavedMovies />
+            <SavedMovies  savedMovies={savedMovies} handleSetSavedMovies={handleSetSavedMovies} handleGetSavedMovies={handleGetSavedMovies} isError={isError} isLoading={isLoading} />
           </ProtectedRoute>} />
         <Route path="/profile" element={
           <ProtectedRoute loggedIn={loggedIn}>

@@ -1,14 +1,23 @@
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import SearchForm from '../SearchForm/SearchForm';
 import './SavedMovies.css';
-import MoviesPage from '../MainContainer/MainContainer';
+import MainContainer from '../MainContainer/MainContainer';
+import { useEffect } from 'react';
 
-const SavedMovies = () => {
+const SavedMovies = ({ handleGetSavedMovies, isError, isLoading, savedMovies }) => {
+
+
+  useEffect(() => {
+    handleGetSavedMovies();
+  }, [])
+
+
+
   return(
-    <MoviesPage>
+    <MainContainer>
       <SearchForm />
-      <MoviesCardList />
-    </MoviesPage>
+      <MoviesCardList  moviesList={savedMovies} isError={isError} isLoading={isLoading} />
+    </MainContainer>
   );
 }
 

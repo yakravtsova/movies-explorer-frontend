@@ -62,3 +62,45 @@ export function editUserData(userData) {
   })
   .then(res => handleResponse(res))
 }
+
+export function likeMovie(movie) {
+  const token = localStorage.getItem('token');
+  return fetch(`${MAIN_URL}/movies`, {
+    method: 'POST',
+    headers: {'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  },
+    body: JSON.stringify(movie)
+  })
+  .then(res => handleResponse(res))
+}
+/*
+deleteLikeCard(cardId) {
+  return fetch(`${this._url}cards/${cardId}/likes`, {
+    method: 'DELETE',
+    headers: {...this._headers, ...this._getAuthHeader()},
+  })
+  .then(res => this._handleResponse(res))
+}
+
+changeLikeCardStatus(cardId, likedInverted) {
+  return fetch(`${this._url}cards/${cardId}/likes`, {
+    method: `${likedInverted ? 'PUT' : 'DELETE'}`,
+    headers: {...this._headers, ...this._getAuthHeader()},
+  })
+  .then(res => this._handleResponse(res))
+}*/
+
+export function getSavedMovies() {
+  const token = localStorage.getItem('token');
+  return fetch(`${MAIN_URL}/movies`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  .then(res => handleResponse(res))
+}

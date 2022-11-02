@@ -23,6 +23,18 @@
   gap: 39px 20px;
 }
 
+.card-list__paragraph {
+  width: 50%;
+  text-align: center;
+  justify-self: center;
+  align-self: center;
+  font-size: 11px;
+}
+
+.card-list__paragraph_error {
+  color: #FF004C;
+}
+
 .card-list__btn {
   width: 320px;
   height: 36px;
