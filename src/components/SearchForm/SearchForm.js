@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 const SearchForm = ({ handleSearchMovies, req }) => {
   const formControl = useFormWithValidation({searchReq: req});
-  const { searchReq } = formControl.errors;
+//  const { searchReq } = formControl.errors;
 
   useEffect(() => {
     console.log(req)
@@ -26,18 +26,17 @@ const SearchForm = ({ handleSearchMovies, req }) => {
             <div className="search-form__input-wrap">
             <label htmlFor="searchReq" className="search-form__label"><img src={searchIcon} className="search-form__icon" alt="Поиск" />
               <input
-                className={`search-form__input ${searchReq && 'search-form__input_error'}`}
+                className={`search-form__input `}
                 placeholder="Фильм"
                 type="text"
                 name="searchReq"
                 id="searchReq"
                 value={formControl?.values?.searchReq || ''}
-                onChange={formControl.handleChange}
-                required />
+                onChange={formControl.handleChange} />
             </label>
-            <span className="search-form__error">{searchReq ? "Нужно ввести ключевое слово" : " "}</span>
+            <span className="search-form__error">{!formControl?.values?.searchReq ? "Нужно ввести ключевое слово" : " "}</span>
             </div>
-            <input type="submit" value="" className="search-form__btn" aria-label="Найти" disabled={!formControl.isValid} />
+            <input type="submit" value="" className="search-form__btn" aria-label="Найти" />
           </fieldset>
           <div className="search-form__line"></div>
           <fieldset className="search-form__input-container search-form__input-container_feat_filter">

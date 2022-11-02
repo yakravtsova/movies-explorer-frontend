@@ -13,7 +13,21 @@ import Footer from '../Footer/Footer';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import ProtectedRoute from '../ProtectedRoute';
 import { register, authorize, getUserData, editUserData } from '../../utils/MainApi';
+import { searchMovies } from '../../utils/MoviesApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import {
+  MOVIES_NUM_DESKTOP,
+  MOVIES_STEP_BIG_DESKTOP,
+  MOVIES_STEP_DESKTOP,
+  MOVIES_NUM_TABLET,
+  MOVIES_STEP_TABLET,
+  MOVIES_NUM_MOBILE,
+  MOVIES_STEP_MOBILE,
+  SCREEN_BIG_DESKTOP,
+  SCREEN_DESKTOP,
+  SCREEN_TABLET,
+  SCREEN_MOBILE
+} from '../../utils/constants/constants';
 
 function App() {
   const [ isMenuVisible, setIsMenuVisible ] = useState(false);
@@ -21,8 +35,14 @@ function App() {
   const [ isInfoTooltipOpen, setIsInfoTooltipOpen ] = useState(false);
   const [ loggedIn, setLoggedIn ] = useState(false);
   const [ currentUser, setCurrentUser ] = useState({});
+  const [ windowWidth, setWindowWidth ] = useState();
+  const [ numberOfMoviesAfterSearch, setNumberOfMoviesAfterSearch ] = useState(0);
+  const [ step, setStep ] = useState(0);
+  const [ isError, setIsError ] = useState(false);
+  const [ foundMovies, setFoundMovies ] = useState([]);
   const loc = useLocation();
-  const isMainPages = (loc.pathname === '/' || loc.pathname === '/movies' || loc.pathname === '/saved-movies');
+  const isMovies = loc.pathname === '/movies';
+  const isMainPages = (loc.pathname === '/' || isMovies || loc.pathname === '/saved-movies');
   const navigate = useNavigate();
   document.documentElement.lang = 'ru';
 
@@ -48,6 +68,46 @@ function App() {
     }
   }, [loggedIn]);
 
+  useEffect(() => {
+    const handleWindowResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      if (isMovies) {
+        if (width <= SCREEN_MOBILE) {
+          setNumbers(MOVIES_NUM_MOBILE, MOVIES_STEP_MOBILE);
+        }
+        if (width > SCREEN_MOBILE && width <= SCREEN_TABLET) {
+          setNumbers(MOVIES_NUM_TABLET, MOVIES_STEP_TABLET);
+        }
+        if (width > SCREEN_TABLET && width <= SCREEN_BIG_DESKTOP) {
+          setNumbers(MOVIES_NUM_DESKTOP, MOVIES_STEP_DESKTOP);
+        }
+        if (width > SCREEN_BIG_DESKTOP) {
+          setNumbers(MOVIES_NUM_DESKTOP, MOVIES_STEP_BIG_DESKTOP);
+        }
+        console.log("set")
+      }
+    }
+
+    handleWindowResize();
+
+    window.addEventListener('resize', () => {
+      setTimeout(handleWindowResize, 500)
+    });
+
+    return() => window.removeEventListener('resize', () => {
+      setTimeout(handleWindowResize, 500)
+    });
+
+  }, [windowWidth, loc])
+
+
+
+  const setNumbers = (num, step) => {
+    setNumberOfMoviesAfterSearch(num);
+    setStep(step);
+  }
+
   const tokenCheck = () => {
     const location = loc.pathname;
     console.log(location);
@@ -64,8 +124,8 @@ function App() {
       })
       .catch(err => {
         console.log(err);
-        setIsOk(false);
-        handleInfoTooltipOpen();
+      /*  setIsOk(false);
+        handleInfoTooltipOpen();*/
       });
     }
   }
@@ -154,6 +214,37 @@ function App() {
     });
   }
 
+  const handleFoundMovies = (movies) => {
+    setFoundMovies(movies)
+  }
+
+  const handleSearchMovies = (req) => {
+    /*  let filtered;
+      const allMovies = JSON.parse(localStorage.getItem('allMovies'));
+      if (allMovies) {
+        filtered = allMovies.filter(m => m.nameRU.toLowerCase().includes(req))
+        setFoundMovies(filtered);
+        localStorage.setItem('foundMovies', JSON.stringify(filtered));
+        localStorage.setItem('searchReq', req);
+      }
+      else {*/
+        searchMovies()
+        .then(res => {
+          const filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
+          setFoundMovies(filtered);
+          localStorage.setItem('allMovies', JSON.stringify(res));
+          localStorage.setItem('foundMovies', JSON.stringify(filtered));
+          localStorage.setItem('searchReq', req);
+        })
+        .catch(err => {
+          console.log(err);
+          setIsError(true)
+        })
+      //}
+    }
+
+
+
 
 
 
@@ -166,7 +257,7 @@ function App() {
         <Route end path="/" element={<Main />} />
         <Route path="/movies" element={
           <ProtectedRoute loggedIn={loggedIn}>
-            <Movies />
+            <Movies numAfterSearch={numberOfMoviesAfterSearch} step={step} foundMovies={foundMovies} handleFoundMovies={handleFoundMovies} handleSearchMovies={handleSearchMovies} isError={isError} />
           </ProtectedRoute>} />
         <Route path="/saved-movies" element={
           <ProtectedRoute loggedIn={loggedIn}>

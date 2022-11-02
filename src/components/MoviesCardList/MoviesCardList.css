@@ -8,12 +8,18 @@
   flex-grow: 1;
 }
 
+.card-list__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .card-list__list {
   margin: 0;
   padding: 0;
   list-style-type: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 39px 20px;
 }
 
@@ -30,6 +36,7 @@
   margin: 60px auto 0;
   padding: 0;
   transition: opacity .4s linear;
+  justify-self: center;
 }
 
 .card-list__btn:hover {
