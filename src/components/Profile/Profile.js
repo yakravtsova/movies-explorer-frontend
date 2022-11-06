@@ -4,16 +4,25 @@ import './Profile.css';
 import InputProfile from '../InputProfile.js/InputProfile';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const Profile = ({ handleEditUserData, handleLogOut }) => {
+const Profile = ({ handleEditUserData, handleLogOut, isError, errorMessage, removeError, handleSetIsProfileUpdated, isProfileUpdated }) => {
   const currentUser = useContext(CurrentUserContext);
   const formControl = useFormWithValidation({email: currentUser.email, name: currentUser.name});
   const { name, email } = formControl.errors;
   const [ isChanged, setIsChanged ] = useState(false);
 
   useEffect(() => {
+    removeError();
+    handleSetIsProfileUpdated('');
+  }, [])
+
+  useEffect(() => {
     setIsChanged(!(currentUser.name === formControl.values.name && currentUser.email === formControl.values.email));
 
   }, [currentUser, formControl.values.name, formControl.values.email])
+
+  useEffect(() => {
+    handleSetIsProfileUpdated('');
+  }, [formControl.values])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,6 +58,7 @@ const Profile = ({ handleEditUserData, handleLogOut }) => {
           regex="(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|'(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*')@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])" />
         </div>
         <div className="profile__form-wrap">
+          <span className={`profile__info ${isError && 'profile__info_error'}`}>{isError ? errorMessage : isProfileUpdated}</span>
           <input className="profile__button" type="submit" value="Редактировать" aria-label="Редактировать" disabled={!formControl.isValid || !isChanged} />
           <button className="profile__button profile__button_feat_exit" type="button" aria-label="Выйти из аккаунта" onClick={handleLogOut}>Выйти из аккаунта</button>
         </div>

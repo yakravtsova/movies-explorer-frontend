@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import Preloader from '../Preloader/Preloader';
 
 
-const MoviesCardList = ({ moviesList, isError, numAfterSearch, step, isLoading, likeMovie, savedMovies }) => {
+const MoviesCardList = ({ moviesList, isError, numAfterSearch, step, isLoading, likeMovie, savedMovies, handleDeleteMovie }) => {
   const loc = useLocation();
   const [ isMovies, setIsMovies ] = useState(false);
   const [ numberOfShownMovies, setNumberOfShownMovies ] = useState(0);
@@ -30,12 +30,14 @@ const MoviesCardList = ({ moviesList, isError, numAfterSearch, step, isLoading, 
   const moviesToShow = () => {
     if (isMovies) {
       return moviesList.slice(0, numberOfShownMovies).map((movie, i) => (
-        <MoviesCard key={movie.id} movie={movie} isMovies={isMovies} likeMovie={likeMovie} savedMovies={savedMovies} />
+        <MoviesCard key={movie.id} movie={movie} isMovies={isMovies} likeMovie={likeMovie} savedMovies={savedMovies} handleDeleteMovie={handleDeleteMovie} />
       ))
     }
-    else return moviesList.map((movie, i) => (
-      <MoviesCard key={movie.movieId} movie={movie} isMovies={isMovies} />
+    else {
+      return moviesList.map((movie, i) => (
+      <MoviesCard key={movie.movieId} movie={movie} isMovies={isMovies} handleDeleteMovie={handleDeleteMovie} />
     ))
+  }
   }
 
   return(

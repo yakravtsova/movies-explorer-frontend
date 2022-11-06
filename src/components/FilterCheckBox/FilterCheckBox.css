@@ -1,6 +1,7 @@
 .filter-check {
   display: flex;
   align-items: center;
+  outline: none;
 }
 
 .filter-check__switch {

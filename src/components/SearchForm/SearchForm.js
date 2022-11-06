@@ -2,19 +2,25 @@ import './SearchForm.css';
 import useFormWithValidation from '../../utils/hooks/useFormWithValidation';
 import searchIcon from '../../images/search-icon.svg';
 import FilterCheckbox from '../FilterCheckBox/FilterCheckBox';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { SEARCH_REQUEST_EMPTY } from '../../utils/constants/errorMessages';
 
-const SearchForm = ({ handleSearchMovies, req }) => {
+const SearchForm = ({ handleSearchMovies, req, handleShortFilmCheck, shortFilmsFilter, shortSavedFilmsFilter }) => {
+  const [ emptyReqErr, setEmptyReqErr ] = useState(false);
   const formControl = useFormWithValidation({searchReq: req});
-//  const { searchReq } = formControl.errors;
 
   useEffect(() => {
-    console.log(req)
-  }, [])
+    setEmptyReqErr(false);
+  }, [formControl.values.searchReq])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const req = formControl.values.searchReq.toLowerCase();
+    const req = formControl.values.searchReq ? formControl.values.searchReq.toLowerCase() : '';
+    if (!req) {
+      setEmptyReqErr(true);
+      return;
+    }
+    setEmptyReqErr(false);
     handleSearchMovies(req);
   }
 
@@ -34,13 +40,16 @@ const SearchForm = ({ handleSearchMovies, req }) => {
                 value={formControl?.values?.searchReq || ''}
                 onChange={formControl.handleChange} />
             </label>
-            <span className="search-form__error">{!formControl?.values?.searchReq ? "Нужно ввести ключевое слово" : " "}</span>
+            <span className="search-form__error">{emptyReqErr ? SEARCH_REQUEST_EMPTY : ' '}</span>
             </div>
             <input type="submit" value="" className="search-form__btn" aria-label="Найти" />
           </fieldset>
           <div className="search-form__line"></div>
           <fieldset className="search-form__input-container search-form__input-container_feat_filter">
-            <FilterCheckbox />
+            <FilterCheckbox
+              handleShortFilmCheck={handleShortFilmCheck}
+              shortFilmsFilter={shortFilmsFilter}
+              shortSavedFilmsFilter={shortSavedFilmsFilter} />
           </fieldset>
         </form>
       </div>

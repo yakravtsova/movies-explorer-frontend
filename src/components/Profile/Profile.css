@@ -41,7 +41,7 @@
 }
 
 .profile__button {
-  margin: 204px 0 0;
+  margin: 4px 0 0;
   border: none;
   padding: 0;
   background-color: #fff;
@@ -58,6 +58,19 @@
 .profile__button_feat_exit {
   margin-top: 16px;
   color: #ff4062;
+}
+
+.profile__info {
+  font-size: 11px;
+  line-height: 20px;
+  min-height: 20px;
+  margin-top: 180px;
+  width: 100%;
+  text-align: center;
+}
+
+.profile__info_error {
+  color: #FF004C;
 }
 
 @media all and (max-width: 768px) {

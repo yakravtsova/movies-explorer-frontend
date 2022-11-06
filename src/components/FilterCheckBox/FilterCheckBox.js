@@ -1,10 +1,24 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './FilterCheckBox.css';
 
-const FilterCheckbox = () => {
+const FilterCheckbox = ({ handleShortFilmCheck, shortFilmsFilter, shortSavedFilmsFilter }) => {
+  const loc = useLocation();
+  const shortFilmCheck = localStorage.getItem('shortFilmCheck') === "true" ? true : false;
+  const isMovies = loc.pathname === '/movies';
+  const isChecked = isMovies ? shortFilmCheck : false;
+  useEffect(() => {
+    handleShortFilmCheck(isChecked);
+  }, [])
+
+  const handleCheck = (e) => {
+    handleShortFilmCheck(e.target.checked);
+    isMovies ? shortFilmsFilter(e.target.checked) : shortSavedFilmsFilter(e.target.checked);
+}
   return(
     <div className="filter-check">
       <label className="filter-check__switch">
-        <input type="checkbox" />
+        <input type="checkbox" name="shortFilmCheck" id="shortFilmCheck" onClick={handleCheck} defaultChecked={isChecked} />
         <span className="filter-check__slider"></span>
       </label>
       <h3 className="filter-check__title">Короткометражки</h3>

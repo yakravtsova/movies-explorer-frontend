@@ -1,12 +1,8 @@
-import { useContext } from 'react';
 import './MoviesCard.css';
 import { SERVER_URL } from '../../utils/constants/constants';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const MoviesCard = ({ movie, isMovies, likeMovie, savedMovies }) => {
-
-  const currentUser = useContext(CurrentUserContext);
-  const isLiked = isMovies ? savedMovies.some(i => i.movieId === movie.id) : true;
+const MoviesCard = ({ movie, isMovies, likeMovie, savedMovies, handleDeleteMovie }) => {
+  const isLiked = isMovies ? savedMovies.some(m => m.movieId === movie.id) : true;
   const url = isMovies ? `${SERVER_URL}${movie.image.url}` : `${movie.image}`;
   const thumbnailUrl = `${SERVER_URL}${movie.image?.formats?.thumbnail?.url}`;
   const name = movie.nameRU;
@@ -20,6 +16,15 @@ const MoviesCard = ({ movie, isMovies, likeMovie, savedMovies }) => {
     likeMovie(movieReq);
   }
 
+  const handleLikeButtonClick = () => {
+    if (isLiked) {
+      const movieId = isMovies ? savedMovies.find(m => m.movieId === movie.id)._id : movie._id;
+      handleDeleteMovie(movieId)
+    } else {
+      handleLikeCard();
+    }
+  }
+
   return(
     <li className="movies-card">
       <div className="movies-card__ratio-box">
@@ -29,7 +34,7 @@ const MoviesCard = ({ movie, isMovies, likeMovie, savedMovies }) => {
       </div>
       <div className="movies-card__info">
         <h2 className="movies-card__title">{name}</h2>
-        <button type="button" className={moviesCardButtonClassName} aria-label={isMovies ? "Нравится" : "Удалить"} onClick={handleLikeCard}></button>
+        <button type="button" className={moviesCardButtonClassName} aria-label={isMovies ? "Нравится" : "Удалить"} onClick={handleLikeButtonClick}></button>
       </div>
       <p className="movies-card__duration">{hours ? `${hours}ч ` : ''}{minutes ? `${minutes}м` : ''}</p>
     </li>

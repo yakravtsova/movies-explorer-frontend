@@ -20,6 +20,16 @@
   flex-direction: row;
 }
 
+.form__error {
+  font-size: 11px;
+  line-height: 20px;
+  color: #FF004C;
+  min-height: 20px;
+  margin-top: 109px;
+  width: 100%;
+  text-align: center;
+}
+
 .form__paragraph {
   margin: 0 6px 0 0;
   font-size: 14px;
@@ -48,7 +58,7 @@
   font-size: 14px;
   line-height: 17px;
   cursor: pointer;
-  margin: 129px 0 14px 0;
+  margin: 5px 0 14px 0;
   border: 0;
   font-weight: 500;
   transition: opacity .4s linear;

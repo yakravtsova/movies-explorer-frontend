@@ -10,9 +10,8 @@ import Login from '../Login/Login';
 import './App.css';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import Footer from '../Footer/Footer';
-import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import ProtectedRoute from '../ProtectedRoute';
-import { register, authorize, getUserData, editUserData, getSavedMovies } from '../../utils/MainApi';
+import { register, authorize, getUserData, editUserData, getSavedMovies, deleteMovie, likeMovie } from '../../utils/MainApi';
 import { searchMovies } from '../../utils/MoviesApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import {
@@ -24,24 +23,28 @@ import {
   MOVIES_NUM_MOBILE,
   MOVIES_STEP_MOBILE,
   SCREEN_BIG_DESKTOP,
-  SCREEN_DESKTOP,
   SCREEN_TABLET,
-  SCREEN_MOBILE
+  SCREEN_MOBILE,
+  PROFILE_UPDATE_MESSAGE
 } from '../../utils/constants/constants';
+import { USER_DATA_ERROR, TOKEN_ERROR, TOKEN_INVALID, SERVER_ERROR, CONFLICT_ERROR, REG_ERROR, PROFILE_UPDATE_ERROR } from '../../utils/constants/errorMessages';
 
 function App() {
   const [ isMenuVisible, setIsMenuVisible ] = useState(false);
-  const [ isOk, setIsOk ] = useState(false);
-  const [ isInfoTooltipOpen, setIsInfoTooltipOpen ] = useState(false);
   const [ loggedIn, setLoggedIn ] = useState(false);
   const [ currentUser, setCurrentUser ] = useState({});
   const [ windowWidth, setWindowWidth ] = useState();
   const [ numberOfMoviesAfterSearch, setNumberOfMoviesAfterSearch ] = useState(0);
   const [ step, setStep ] = useState(0);
   const [ savedMovies, setSavedMovies ] = useState([]);
+  const [ shownSavedMovies, setShownSavedMovies ] = useState([]);
+  const [ filteredSavedMovies, setFilteredSavedMovies ] = useState([]);
   const [ foundMovies, setFoundMovies ] = useState([]);
   const [ isError, setIsError ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(false);
+  const [ isProfileUpdated, setIsProfileUpdated ] = useState('');
+  const [ errorMessage, setErrorMessage ] = useState('');
+  const [ shortFilmCheck, setShortFilmCheck ] = useState(false);
   const loc = useLocation();
   const isMovies = loc.pathname === '/movies';
   const isMainPages = (loc.pathname === '/' || isMovies || loc.pathname === '/saved-movies');
@@ -54,19 +57,12 @@ function App() {
 
  useEffect(() => {
     if (loggedIn) {
-    /*  api.getAllData()
-      .then(allData => {
-        const [userData, allCardsData] = allData;
-        console.log(userData);
-        setCards(allCardsData);
-        setCurrentUser(userData)
-      })
-      .catch(err => console.log(err));*/
       getUserData()
       .then(data => {
         setCurrentUser(data);
       })
       .catch(err => console.log(err))
+      handleGetSavedMovies();
     }
   }, [loggedIn]);
 
@@ -87,7 +83,6 @@ function App() {
         if (width > SCREEN_BIG_DESKTOP) {
           setNumbers(MOVIES_NUM_DESKTOP, MOVIES_STEP_BIG_DESKTOP);
         }
-        console.log("set")
       }
     }
 
@@ -112,7 +107,6 @@ function App() {
 
   const tokenCheck = () => {
     const location = loc.pathname;
-    console.log(location);
   //  setLocation(loc.pathname);
     const token = localStorage.getItem('token');
     if (token) {
@@ -126,8 +120,6 @@ function App() {
       })
       .catch(err => {
         console.log(err);
-      /*  setIsOk(false);
-        handleInfoTooltipOpen();*/
       });
     }
   }
@@ -136,12 +128,8 @@ function App() {
     setLoggedIn(true);
   }
 
-  const handleMenuOpen = () => {
-    setIsMenuVisible(!isMenuVisible);
-  }
-
-  const handleInfoTooltipOpen = () => {
-    setIsInfoTooltipOpen(!isInfoTooltipOpen);
+  const handleMenuOpen = (bool) => {
+    setIsMenuVisible(bool);
   }
 
   //регистрация
@@ -149,17 +137,24 @@ function App() {
     register(regData)
       .then(res => {
         if (res) {
-          setIsOk(true);
-          handleInfoTooltipOpen();
+          setIsError(false);
+          const {name, ...loginData} = regData;
+          handleAuthorization(loginData);
         }
         else {
-          setIsOk(false);
-          handleInfoTooltipOpen();
+          setIsError(true);
+          setErrorMessage(REG_ERROR)
         }
-        })
+      })
       .catch(err => {
-        setIsOk(false);
-        handleInfoTooltipOpen();
+        setIsError(true);
+        console.log(err);
+        if (err === 409) {
+          setErrorMessage(CONFLICT_ERROR);
+        }
+        if (err === 500) {
+          setErrorMessage(SERVER_ERROR);
+        }
       })
   }
 
@@ -168,35 +163,43 @@ function App() {
     authorize(loginData)
     .then(data => {
       if (data.token) {
+        setIsError(false);
         handleLogin();
-      //  tokenCheck();
-        navigate('/movies', { replace: true });
-      /*  api.getAllData()
-          .then(allData => {
-            const [userData, allCardsData] = allData;
-            console.log(userData);
-            setCards(allCardsData);
-            setCurrentUser(userData)
+       // tokenCheck();
+        getUserData()
+          .then(data => {
+            if (data) {
+              setCurrentUser(data);
+              navigate('/movies', { replace: true });
+            }
           })
-          .catch(err => console.log(err));
-
+          .catch(err => {
+            if (err === 401) {
+              setIsError(true);
+              setErrorMessage(TOKEN_INVALID)
+            }
+          });
       }
       else {
-        setIsOk(false);
-        handleTooltipOpen()
-      }*/
-    }})
+        setIsError(true);
+        setErrorMessage(TOKEN_ERROR);
+      }
+    })
     .catch(err => {
-      setIsOk(false);
-      handleInfoTooltipOpen();
-      console.log(err);
+      setIsError(true);
+      if (err === 401) {
+        setErrorMessage(USER_DATA_ERROR)
+      }
+      else {
+        setErrorMessage(SERVER_ERROR)
+      }
     })
   }
 
   //выход из аккаунта
   const handleLogOut = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('allMovies');
+    localStorage.removeItem('shortFilmCheck');
     localStorage.removeItem('foundMovies');
     localStorage.removeItem('searchReq');
     setLoggedIn(false);
@@ -207,12 +210,20 @@ function App() {
   const handleEditUserData = (userData) => {
     editUserData(userData)
     .then(data => {
+      setIsError(false);
       setCurrentUser(data);
+      setIsProfileUpdated(PROFILE_UPDATE_MESSAGE);
     })
     .catch(err => {
       console.log(err);
-      setIsOk(false);
-      handleInfoTooltipOpen();
+      setIsError(true);
+      setIsProfileUpdated('');
+      if (err === 409) {
+        setErrorMessage(CONFLICT_ERROR)
+      }
+      else {
+        setErrorMessage(PROFILE_UPDATE_ERROR)
+      }
     });
   }
 
@@ -222,10 +233,14 @@ function App() {
     setIsLoading(true);
     searchMovies()
       .then(res => {
-        const filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
-        setFoundMovies(filtered);
+        let filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
         localStorage.setItem('foundMovies', JSON.stringify(filtered));
+        if (shortFilmCheck) {
+          filtered = filtered.filter(m => m.duration < 41);
+        }
+        setFoundMovies(filtered);
         localStorage.setItem('searchReq', req);
+        localStorage.setItem('shortFilmCheck', shortFilmCheck);
         setIsLoading(false);
       })
       .catch(err => {
@@ -233,6 +248,29 @@ function App() {
         setIsError(true);
         setIsLoading(false);
       })
+  }
+
+  const shortFilmsFilter = (bool) => {
+    let filtered;
+    if (bool) {
+      filtered = foundMovies.filter(m => m.duration < 41);
+    }
+    else {
+      filtered = JSON.parse(localStorage.getItem('foundMovies'));
+    }
+    setFoundMovies(filtered);
+  }
+
+  const shortSavedFilmsFilter = (bool) => {
+    let filtered;
+    setFilteredSavedMovies(shownSavedMovies);
+    if (bool) {
+      filtered = shownSavedMovies.filter(m => m.duration < 41);
+    }
+    else {
+      filtered = filteredSavedMovies;
+    }
+    setShownSavedMovies(filtered);
   }
 
   const handleSetFoundMovies = (movies) => {
@@ -243,13 +281,17 @@ function App() {
     setSavedMovies(movies)
   }
 
+  const handleSetShownSavedMovies = (movies) => {
+    setShownSavedMovies(movies);
+  }
+
   //получить сохранённые фильмы
   const handleGetSavedMovies = () => {
     setIsError(false);
-    setIsLoading(true);
     getSavedMovies()
       .then(res => {
         setSavedMovies(res);
+        setShownSavedMovies(res);
         setIsLoading(false);
       })
       .catch(err => {
@@ -259,8 +301,46 @@ function App() {
       })
   }
 
+  //отфильтровать сохранённые
+  const handleFilterSavedMovies = (req) => {
+    setIsError(false);
+    setFilteredSavedMovies(savedMovies.filter(m => m.nameRU.toLowerCase().includes(req)));
+    setShownSavedMovies(shownSavedMovies.filter(m => m.nameRU.toLowerCase().includes(req)));
+  }
 
+  //сохранить фильм
+  const handleLikeMovie = (movie) => {
+    likeMovie(movie)
+      .then(res => {
+        const movies = [...savedMovies, res]
+        setSavedMovies(movies);
+        setShownSavedMovies(movies);
+      })
+      .catch(err => console.log(err))
+  }
 
+  //удалить фильм из сохранённых
+  const handleDeleteMovie = (movieId) => {
+    deleteMovie(movieId)
+      .then(res => {
+        setSavedMovies(state => state.filter(m => m._id !== movieId));
+        setShownSavedMovies(state => state.filter(m => m._id !== movieId));
+      })
+      .catch(err => console.log(err))
+  }
+
+  const removeError = () => {
+    setIsError(false);
+    setErrorMessage('');
+  }
+
+  const handleShortFilmCheck = (value) => {
+    setShortFilmCheck(value);
+  }
+
+  const handleSetIsProfileUpdated = (value) => {
+    setIsProfileUpdated(value)
+  }
 
 
 
@@ -283,30 +363,49 @@ function App() {
               isError={isError}
               handleSetFoundMovies={handleSetFoundMovies}
               foundMovies={foundMovies}
-              handleSetSavedMovies={handleSetSavedMovies} />
+              handleLikeMovie={handleLikeMovie}
+              handleDeleteMovie={handleDeleteMovie}
+              removeError={removeError}
+              errorMessage={errorMessage}
+              handleShortFilmCheck={handleShortFilmCheck}
+              shortFilmsFilter={shortFilmsFilter} />
           </ProtectedRoute>} />
         <Route path="/saved-movies" element={
           <ProtectedRoute loggedIn={loggedIn}>
-            <SavedMovies  savedMovies={savedMovies} handleSetSavedMovies={handleSetSavedMovies} handleGetSavedMovies={handleGetSavedMovies} isError={isError} isLoading={isLoading} />
+            <SavedMovies
+              movies={shownSavedMovies}
+              savedMovies={savedMovies}
+              handleSetSavedMovies={handleSetSavedMovies}
+              handleSetShownSavedMovies={handleSetShownSavedMovies}
+              handleGetSavedMovies={handleGetSavedMovies}
+              handleDeleteMovie={handleDeleteMovie}
+              isError={isError}
+              isLoading={isLoading}
+              removeError={removeError}
+              errorMessage={errorMessage}
+              handleFilterSavedMovies={handleFilterSavedMovies}
+              handleShortFilmCheck={handleShortFilmCheck}
+              shortSavedFilmsFilter={shortSavedFilmsFilter} />
           </ProtectedRoute>} />
         <Route path="/profile" element={
           <ProtectedRoute loggedIn={loggedIn}>
-            <Profile handleEditUserData={handleEditUserData} handleLogOut={handleLogOut} />
+            <Profile
+              handleEditUserData={handleEditUserData}
+              handleLogOut={handleLogOut}
+              isError={isError}
+              errorMessage={errorMessage}
+              removeError={removeError}
+              handleSetIsProfileUpdated={handleSetIsProfileUpdated}
+              isProfileUpdated={isProfileUpdated}/>
           </ProtectedRoute>} />
-        <Route path="/signin" element={<Login handleAuthorization={handleAuthorization} />} />
-        <Route path="/signup" element={<Register handleRegister={handleRegister} />} />
+        <Route path="/signin" element={<Login handleAuthorization={handleAuthorization} isError={isError} errorMessage={errorMessage} removeError={removeError} />} />
+        <Route path="/signup" element={<Register handleRegister={handleRegister} isError={isError} errorMessage={errorMessage} removeError={removeError} />} />
         <Route path="*" element={
           <ProtectedRoute loggedIn={loggedIn}>
             <NotFoundPage />
           </ProtectedRoute>} />
       </Routes>
       {isMainPages && <Footer />}
-      <InfoTooltip
-        isOpen={isInfoTooltipOpen}
-        isSuccess={isOk}
-        successMessage="Вы успешно зарегистрировались!"
-        errorMessage="Что-то пошло не так! Попробуйте ещё раз."
-        onClose={handleInfoTooltipOpen} />
     </CurrentUserContext.Provider>
   );
 }

@@ -8,7 +8,7 @@ const Header = ({ isMenuVisible, handleMenuOpen, loggedIn }) => {
   const isMain = (loc.pathname === '/');
 
   const onBurgerClick = () => {
-    handleMenuOpen();
+    handleMenuOpen(state => !state);
   }
 
   return(

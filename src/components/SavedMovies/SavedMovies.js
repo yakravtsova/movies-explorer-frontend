@@ -4,19 +4,32 @@ import './SavedMovies.css';
 import MainContainer from '../MainContainer/MainContainer';
 import { useEffect } from 'react';
 
-const SavedMovies = ({ handleGetSavedMovies, isError, isLoading, savedMovies }) => {
-
-
+const SavedMovies = ({
+  isError,
+  isLoading,
+  movies,
+  savedMovies,
+  handleDeleteMovie,
+  handleFilterSavedMovies,
+  handleSetShownSavedMovies,
+  removeError,
+  errorMessage,
+  handleShortFilmCheck,
+  shortSavedFilmsFilter }) => {
   useEffect(() => {
-    handleGetSavedMovies();
+    handleSetShownSavedMovies(savedMovies);
+    removeError();
   }, [])
-
-
 
   return(
     <MainContainer>
-      <SearchForm />
-      <MoviesCardList  moviesList={savedMovies} isError={isError} isLoading={isLoading} />
+      <SearchForm
+        handleSearchMovies={handleFilterSavedMovies}
+        isError={isError}
+        errorMessage={errorMessage}
+        handleShortFilmCheck={handleShortFilmCheck}
+        shortSavedFilmsFilter={shortSavedFilmsFilter} />
+      <MoviesCardList  moviesList={movies} isError={isError} isLoading={isLoading} handleDeleteMovie={handleDeleteMovie} />
     </MainContainer>
   );
 }

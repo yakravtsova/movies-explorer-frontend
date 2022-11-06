@@ -4,7 +4,7 @@ function handleResponse(res) {
   if (res.ok) {
     return res.json();
   }
-  return Promise.reject(`Что-то пошло не так: ${res.status}`);
+  return Promise.reject(res.status);
 }
 
 export function register(regData) {
@@ -75,22 +75,18 @@ export function likeMovie(movie) {
   })
   .then(res => handleResponse(res))
 }
-/*
-deleteLikeCard(cardId) {
-  return fetch(`${this._url}cards/${cardId}/likes`, {
-    method: 'DELETE',
-    headers: {...this._headers, ...this._getAuthHeader()},
-  })
-  .then(res => this._handleResponse(res))
-}
 
-changeLikeCardStatus(cardId, likedInverted) {
-  return fetch(`${this._url}cards/${cardId}/likes`, {
-    method: `${likedInverted ? 'PUT' : 'DELETE'}`,
-    headers: {...this._headers, ...this._getAuthHeader()},
+export function deleteMovie(movieId) {
+  const token = localStorage.getItem('token');
+  return fetch(`${MAIN_URL}/movies/${movieId}`, {
+    method: 'DELETE',
+    headers: {'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  },
   })
-  .then(res => this._handleResponse(res))
-}*/
+  .then(res => handleResponse(res))
+}
 
 export function getSavedMovies() {
   const token = localStorage.getItem('token');

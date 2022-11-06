@@ -3,21 +3,33 @@ import StartPage from '../StartPage/StartPage';
 import Form from '../Form/Form';
 import Input from '../Input/Input';
 import WelcomeTitle from '../WelcomeTitle/WelcomeTitle';
+import { useEffect } from 'react';
 
-const Login = ({ handleAuthorization }) => {
+const Login = ({ handleAuthorization, isError, errorMessage, removeError }) => {
   const formControl = useFormWithValidation();
   const {email, password} = formControl.errors;
+
+  useEffect(() => {
+    removeError();
+    formControl.resetForm();
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     handleAuthorization(formControl.values);
-    formControl.resetForm();
   }
 
   return(
     <StartPage>
       <WelcomeTitle title="Рады видеть!" />
-      <Form buttonValue="Войти" question="Ещё не зарегистрированы?" linkTo="/signup" linkText="Регистрация" isValid={formControl.isValid} onSubmit={handleSubmit} >
+      <Form
+        buttonValue="Войти"
+        question="Ещё не зарегистрированы?"
+        linkTo="/signup" linkText="Регистрация"
+        isValid={formControl.isValid}
+        onSubmit={handleSubmit}
+        isError={isError}
+        errorMessage={errorMessage} >
         <Input
           type="email"
           inputName="email"

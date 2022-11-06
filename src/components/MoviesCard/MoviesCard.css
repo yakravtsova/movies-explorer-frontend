@@ -81,4 +81,8 @@
     line-height: 15px;
     margin-top: 6px;
   }
+
+  .movies-card__btn_feat_delete {
+    display: block;
+  }
 }

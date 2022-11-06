@@ -3,22 +3,35 @@ import StartPage from '../StartPage/StartPage';
 import Form from '../Form/Form';
 import Input from '../Input/Input';
 import WelcomeTitle from '../WelcomeTitle/WelcomeTitle';
+import { useEffect } from 'react';
 
-const Register = ({ handleRegister }) => {
+const Register = ({ handleRegister, isError, errorMessage, removeError }) => {
   const formControl = useFormWithValidation();
   const {name, email, password} = formControl.errors;
+
+  useEffect(() => {
+    removeError();
+    formControl.resetForm();
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formControl.values);
     handleRegister(formControl.values);
-    formControl.resetForm();
   }
 
   return(
     <StartPage>
       <WelcomeTitle title="Добро пожаловать!" />
-      <Form buttonValue="Зарегистрироваться" question="Уже зарегистрированы?" linkTo="/signin" linkText="Войти" isValid={formControl.isValid} onSubmit={handleSubmit} >
+      <Form
+        buttonValue="Зарегистрироваться"
+        question="Уже зарегистрированы?"
+        linkTo="/signin"
+        linkText="Войти"
+        isValid={formControl.isValid}
+        onSubmit={handleSubmit}
+        isError={isError}
+        errorMessage={errorMessage} >
         <Input
           type="text"
           inputName="name"

@@ -10,7 +10,7 @@ const Nav = ({ loggedIn, isMenuVisible, handleMenuOpen }) => {
 
   const handleMenuClose = (evt) => {
     if (evt.target.classList.contains('nav__menu-link') || evt.target.classList.contains('account-link') || evt.target.classList.contains('nav__wrap_visible')) {
-      handleMenuOpen();
+      handleMenuOpen(false);
     }
   }
 
