@@ -11,6 +11,7 @@ import './App.css';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import Footer from '../Footer/Footer';
 import ProtectedRoute from '../ProtectedRoute';
+import ForbiddenRoute from '../ForbiddenRoute';
 import { register, authorize, getUserData, editUserData, getSavedMovies, deleteMovie, likeMovie } from '../../utils/MainApi';
 import { searchMovies } from '../../utils/MoviesApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
@@ -25,7 +26,8 @@ import {
   SCREEN_BIG_DESKTOP,
   SCREEN_TABLET,
   SCREEN_MOBILE,
-  PROFILE_UPDATE_MESSAGE
+  PROFILE_UPDATE_MESSAGE,
+  FULL_LENGTH_DURATION
 } from '../../utils/constants/constants';
 import { USER_DATA_ERROR, TOKEN_ERROR, TOKEN_INVALID, SERVER_ERROR, CONFLICT_ERROR, REG_ERROR, PROFILE_UPDATE_ERROR } from '../../utils/constants/errorMessages';
 
@@ -120,6 +122,9 @@ function App() {
       })
       .catch(err => {
         console.log(err);
+        if (err) {
+          handleLogOut();
+        }
       });
     }
   }
@@ -203,6 +208,7 @@ function App() {
     localStorage.removeItem('foundMovies');
     localStorage.removeItem('searchReq');
     setLoggedIn(false);
+    setSavedMovies([]);
     navigate('/', { replace: true });
   }
 
@@ -227,20 +233,32 @@ function App() {
     });
   }
 
+  //поиск фильмов по строке и длительности
+  const searchMoviesAllTheWay = (arr, req) => {
+    let filtered = arr.filter(m => m.nameRU.toLowerCase().includes(req));
+    localStorage.setItem('foundMovies', JSON.stringify(filtered));
+    if (shortFilmCheck) {
+      filtered = filtered.filter(m => m.duration < FULL_LENGTH_DURATION);
+    }
+    setFoundMovies(filtered);
+    localStorage.setItem('searchReq', req);
+    localStorage.setItem('shortFilmCheck', shortFilmCheck);
+  }
+
   //найти фильмы
   const handleSearchMovies = (req) => {
     setIsError(false);
     setIsLoading(true);
-    searchMovies()
+    const allMovies = JSON.parse(localStorage.getItem('allMovies'));
+    if (allMovies) {
+      searchMoviesAllTheWay(allMovies, req);
+      setIsLoading(false);
+    }
+    else {
+      searchMovies()
       .then(res => {
-        let filtered = res.filter(m => m.nameRU.toLowerCase().includes(req));
-        localStorage.setItem('foundMovies', JSON.stringify(filtered));
-        if (shortFilmCheck) {
-          filtered = filtered.filter(m => m.duration < 41);
-        }
-        setFoundMovies(filtered);
-        localStorage.setItem('searchReq', req);
-        localStorage.setItem('shortFilmCheck', shortFilmCheck);
+        localStorage.setItem('allMovies', JSON.stringify(res));
+        searchMoviesAllTheWay(res, req);
         setIsLoading(false);
       })
       .catch(err => {
@@ -248,12 +266,15 @@ function App() {
         setIsError(true);
         setIsLoading(false);
       })
+    }
+
   }
 
   const shortFilmsFilter = (bool) => {
     let filtered;
+    localStorage.setItem('shortFilmCheck', shortFilmCheck);
     if (bool) {
-      filtered = foundMovies.filter(m => m.duration < 41);
+      filtered = foundMovies.filter(m => m.duration < FULL_LENGTH_DURATION);
     }
     else {
       filtered = JSON.parse(localStorage.getItem('foundMovies'));
@@ -265,7 +286,7 @@ function App() {
     let filtered;
     setFilteredSavedMovies(shownSavedMovies);
     if (bool) {
-      filtered = shownSavedMovies.filter(m => m.duration < 41);
+      filtered = shownSavedMovies.filter(m => m.duration < FULL_LENGTH_DURATION);
     }
     else {
       filtered = filteredSavedMovies;
@@ -302,10 +323,14 @@ function App() {
   }
 
   //отфильтровать сохранённые
-  const handleFilterSavedMovies = (req) => {
+  const handleFilterSavedMovies = (req, bool) => {
     setIsError(false);
-    setFilteredSavedMovies(savedMovies.filter(m => m.nameRU.toLowerCase().includes(req)));
-    setShownSavedMovies(shownSavedMovies.filter(m => m.nameRU.toLowerCase().includes(req)));
+    let filtered = savedMovies.filter(m => m.nameRU.toLowerCase().includes(req))
+    setFilteredSavedMovies(filtered);
+    if (shortFilmCheck) {
+      filtered = filtered.filter(m => m.duration < FULL_LENGTH_DURATION);
+    }
+    setShownSavedMovies(filtered);
   }
 
   //сохранить фильм
@@ -398,12 +423,15 @@ function App() {
               handleSetIsProfileUpdated={handleSetIsProfileUpdated}
               isProfileUpdated={isProfileUpdated}/>
           </ProtectedRoute>} />
-        <Route path="/signin" element={<Login handleAuthorization={handleAuthorization} isError={isError} errorMessage={errorMessage} removeError={removeError} />} />
-        <Route path="/signup" element={<Register handleRegister={handleRegister} isError={isError} errorMessage={errorMessage} removeError={removeError} />} />
-        <Route path="*" element={
-          <ProtectedRoute loggedIn={loggedIn}>
-            <NotFoundPage />
-          </ProtectedRoute>} />
+        <Route path="/signin" element={
+          <ForbiddenRoute loggedIn={loggedIn}>
+            <Login handleAuthorization={handleAuthorization} isError={isError} errorMessage={errorMessage} removeError={removeError} />
+          </ForbiddenRoute>} />
+        <Route path="/signup" element={
+          <ForbiddenRoute loggedIn={loggedIn}>
+            <Register handleRegister={handleRegister} isError={isError} errorMessage={errorMessage} removeError={removeError} />
+          </ForbiddenRoute>} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       {isMainPages && <Footer />}
     </CurrentUserContext.Provider>

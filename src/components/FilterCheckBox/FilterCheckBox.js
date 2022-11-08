@@ -12,8 +12,15 @@ const FilterCheckbox = ({ handleShortFilmCheck, shortFilmsFilter, shortSavedFilm
   }, [])
 
   const handleCheck = (e) => {
-    handleShortFilmCheck(e.target.checked);
-    isMovies ? shortFilmsFilter(e.target.checked) : shortSavedFilmsFilter(e.target.checked);
+    const checked = e.target.checked;
+    handleShortFilmCheck(checked);
+    if (isMovies) {
+      shortFilmsFilter(checked);
+      localStorage.setItem('shortFilmCheck', checked);
+    }
+    else {
+      shortSavedFilmsFilter(checked);
+    }
 }
   return(
     <div className="filter-check">
