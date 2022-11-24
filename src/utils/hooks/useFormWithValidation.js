@@ -7,7 +7,7 @@ const useFormWithValidation = (initData) => {
 
   useEffect(() => {
     setValues(initData);
-  }, [])
+  }, [initData])
 
   const handleChange = (event) => {
     const target = event.target;
