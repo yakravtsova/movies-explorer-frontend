@@ -1,11 +1,42 @@
-# Ссылка на макет Figma
-[Макет Figma](https://disk.yandex.ru/d/KNn9HPk89Fxp0g)
+# Дипломный проект Movies-explorer (Фронтенд)
 
-# Ссылка на сайт: 
-https://yakravtsova.nomoredomains.icu
+Репозиторий для фронтенд части приложения `Movies-explorer`. Репозиторий бэкенд части можно найти по [ссылке](https://github.com/yakravtsova/movies-explorer-api)
+В приложении реализованы следующие возможности: 
+* авторизация и регистрация пользователей,
+* возможность изменить данные пользователя,
+* поиск по фильмам из подборки [BeatFilm Festival](https://beatfilmfestival.ru/) на [Кинопоиск](https://beatfilmfestival.ru/),
+* фильтрация по короткометражкам,
+* сохранение фильмов в личном кабинете. 
 
-# Публичный адрес сервера: 
-178.154.221.207
+Ссылка на сайт: https://yakravtsova.nomoredomains.icu
 
-# Pull request:
-https://github.com/yakravtsova/movies-explorer-frontend/pull/2
+## Примененные навыки и технологии
+* Вёрстка
+  - вёрстка с использованием Flexbox и Grid Layout
+  - семантическая верстка
+  - адаптивная вёрстка сайта для разных экранов (от 320 до 1280+)
+  - вёрстка форм (текстовые поля и кнопки)
+  - методология БЭМ
+
+* React
+  - использован Create React App
+  - хуки `useState`, `useEffect` и кастомный хук для сбора данных из форм и их валидации
+  - поднятие стейта
+  - глобальный стейт через React Context
+  - управляемые компоненты в элементах формы
+
+* React Router
+  - реализован функционал регистрации и авторизации
+  - защищенные маршруты
+  - авторизация через JWT
+  - хранение токена в Local Starage
+
+### Инструкция по развёртыванию проекта:
+```bash
+# клонирование репозитория
+$ git clone https://github.com/yakravtsova/movies-explorer-frontend.git
+# установка зависимостей
+$ npm install
+# запуск develop-сборки фронтенда
+$ npm run start
+```
